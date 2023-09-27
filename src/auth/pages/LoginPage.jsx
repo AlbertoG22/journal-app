@@ -1,26 +1,40 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
 import { Google } from '@mui/icons-material';
-import { Button, Grid, Link, TextField, Typography } from '@mui/material';
+import { Button, Grid, Link, TextField, Typography, Alert } from '@mui/material';
 import { AuthLayout } from '../layout/AuthLayout';
 import { useForm } from '../../hooks';
-import { checkingAuthentication, startGoogleSignIn } from '../../store/auth';
+import { checkingAuthentication, startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth';
+
+const formValidations = {
+  email: [ (value) => value.includes('@'), 'El email debe tener una @'],
+  password: [ (value) => value.length >= 6, 'El password debe tener más de 6 letras.'],
+};
 
 export const LoginPage = () => {
-  const { status } = useSelector( state => state.auth );
+  const { status, errorMessage } = useSelector( state => state.auth );
+  const [formSubmitted, setFormSubmitted] = useState(false);
   const dispatch = useDispatch();
-  const { email, password, onInputChange } = useForm({
-    email: 'alberto@gmail.com',
-    password: '123456'
-  });
+  
+
+  const { 
+    formState, email, password, onInputChange, isFormValid, emailValid, passwordValid
+  } = useForm({
+    email: '',
+    password: ''
+  }, formValidations);
 
   const isAuthenticating = useMemo( () => status === 'checking', [status] );
   
   const onSubmit = ( event ) => {
     event.preventDefault();
-    dispatch( checkingAuthentication() );
-    console.log({ email, password });
+    setFormSubmitted(true);
+    // dispatch( checkingAuthentication() );
+
+    if ( !isFormValid ) return;
+
+    dispatch( startLoginWithEmailPassword(formState) );
   };
 
   const onGoogleSignIn = () => {
@@ -41,6 +55,8 @@ export const LoginPage = () => {
               name='email'
               value={ email }
               onChange={ onInputChange }
+              error={ !!emailValid && formSubmitted }
+              helperText={ emailValid }
             />
           </Grid>
 
@@ -53,10 +69,15 @@ export const LoginPage = () => {
               name='password'
               value={ password }
               onChange={ onInputChange }
+              error={ !!passwordValid && formSubmitted }
+              helperText={ passwordValid }
             />
           </Grid>
 
           <Grid container spacing={ 2 } sx={{ mb: 2, mt: 1 }}>
+          <Grid item xs={ 12 } display={ errorMessage ? '' : 'none' }>
+              <Alert severity='error'>{ errorMessage }</Alert>
+            </Grid>
             <Grid item xs={ 12 } sm={ 6 }>
               <Button
                 disabled={ isAuthenticating }
