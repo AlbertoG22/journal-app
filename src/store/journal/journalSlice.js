@@ -16,7 +16,9 @@ export const journalSlice = createSlice({
         // },
     },
     reducers: {
-        savingNewNote: ( state, action ) => {},
+        savingNewNote: ( state ) => {
+            state.isSaving = true;
+        },
         // cuando se le de click al botón +, empezar a crear el espacio en Firebase para empezarla a actualizar
         addNewEmptyNote: ( state, action ) => {
             state.notes.push( action.payload );
@@ -45,6 +47,7 @@ export const journalSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
+    savingNewNote,
     addNewEmptyNote,
     setActiveNote,
     setNotes,
