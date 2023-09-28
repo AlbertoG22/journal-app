@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const journalSlice = createSlice({
     name: 'journal',
     initialState: {
-        isSaving: true,
+        isSaving: false,
         messageSaved: '',
         notes: [],
         active: null,
@@ -16,11 +16,17 @@ export const journalSlice = createSlice({
         // },
     },
     reducers: {
+        savingNewNote: ( state, action ) => {},
         // cuando se le de click al botón +, empezar a crear el espacio en Firebase para empezarla a actualizar
-        addEmptyNote: ( state, action ) => {},
+        addNewEmptyNote: ( state, action ) => {
+            state.notes.push( action.payload );
+            state.isSaving = false;
+        },
 
         // establecer la nota activa para cuando se dé click sobre una
-        setActiveNote: ( state, action ) => {},
+        setActiveNote: ( state, action ) => {
+            state.active =  action.payload;
+        },
 
         // cargar las notas de Firebase
         setNotes: ( state, action ) => {},
@@ -39,7 +45,7 @@ export const journalSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-    addEmptyNote,
+    addNewEmptyNote,
     setActiveNote,
     setNotes,
     setSaving,
