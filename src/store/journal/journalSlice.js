@@ -31,7 +31,9 @@ export const journalSlice = createSlice({
         },
 
         // cargar las notas de Firebase
-        setNotes: ( state, action ) => {},
+        setNotes: ( state, action ) => {
+            state.notes = action.payload;
+        },
 
         // para cuando guardemos las notas
         setSaving: ( state ) => {},
