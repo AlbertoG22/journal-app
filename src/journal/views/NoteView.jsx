@@ -4,7 +4,7 @@ import { Button, Grid, TextField, Typography } from '@mui/material';
 import { ImageGallery } from '../components';
 import { useForm } from '../../hooks';
 import { useDispatch, useSelector } from 'react-redux';
-import { setActiveNote } from '../../store/journal';
+import { setActiveNote, startSaveNote } from '../../store/journal';
 
 export const NoteView = () => {
   const dispatch = useDispatch();
@@ -21,7 +21,7 @@ export const NoteView = () => {
   }, [formState]);
 
   const onSaveNote = () => {
-    dispatch(  );
+    dispatch( startSaveNote() );
   };
 
   return (
