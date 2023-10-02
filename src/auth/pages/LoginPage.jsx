@@ -5,25 +5,26 @@ import { Google } from '@mui/icons-material';
 import { Button, Grid, Link, TextField, Typography, Alert } from '@mui/material';
 import { AuthLayout } from '../layout/AuthLayout';
 import { useForm } from '../../hooks';
-import { checkingAuthentication, startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth';
+import { startGoogleSignIn, startLoginWithEmailPassword } from '../../store/auth';
 
 const formValidations = {
   email: [ (value) => value.includes('@'), 'El email debe tener una @'],
   password: [ (value) => value.length >= 6, 'El password debe tener más de 6 letras.'],
 };
 
+const formData = {
+  email: '',
+  password: ''
+};
+
 export const LoginPage = () => {
   const { status, errorMessage } = useSelector( state => state.auth );
   const [formSubmitted, setFormSubmitted] = useState(false);
   const dispatch = useDispatch();
-  
 
   const { 
     formState, email, password, onInputChange, isFormValid, emailValid, passwordValid
-  } = useForm({
-    email: '',
-    password: ''
-  }, formValidations);
+  } = useForm(formData, formValidations);
 
   const isAuthenticating = useMemo( () => status === 'checking', [status] );
   
