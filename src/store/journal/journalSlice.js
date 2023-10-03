@@ -28,6 +28,7 @@ export const journalSlice = createSlice({
         // establecer la nota activa para cuando se dé click sobre una
         setActiveNote: ( state, action ) => {
             state.active =  action.payload;
+            state.messageSaved = '';
         },
 
         // cargar las notas de Firebase
@@ -38,7 +39,7 @@ export const journalSlice = createSlice({
         // para cuando guardemos las notas
         setSaving: ( state ) => {
             state.isSaving = true;
-            // TODO: mensaje de error...
+            state.messageSaved = '';
         },
 
         // actualizar una nota
@@ -50,7 +51,8 @@ export const journalSlice = createSlice({
                 }
                 return note;
             });
-            // TODO: Mostrar mensaje de actualización
+            
+            state.messageSaved = `${ action.payload.title }, actualizada correctamente.`;
         },
 
         // borrar nota
