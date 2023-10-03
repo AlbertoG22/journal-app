@@ -55,7 +55,14 @@ export const startUploadingFiles = ( files = [] ) => {
     return async( dispatch ) => {
         dispatch( setSaving() );
 
-        await fileUpload( files[0] ); // por ahora solo un file
+        const fileUploadPromises = [];
+        for ( const file of files ) {
+            // no se dispara la fn, solo se crea el array de promesas
+            fileUploadPromises.push( fileUpload(file) );
+        }
+
+        const photosUrls = await Promise.all( fileUploadPromises );
+        console.log(photosUrls);
 
     };
 };
